@@ -1,0 +1,42 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Medicamento {
+  id         Int         @id @default(autoincrement())
+  codigo     String
+  fornecedor String
+  nome       String
+  descricao  String
+  unidade    String
+  total      Int
+  createdAt  DateTime    @default(now())
+  updatedAt  DateTime    @updatedAt
+  Movimento  Movimento[]
+}
+
+model Movimento {
+  id            Int         @id @default(autoincrement())
+  medicamento   Medicamento @relation(fields: [medicamentoId], references: [id])
+  medicamentoId Int // relation scalar field  (used in the `@relation` attribute above)
+  tipo          String
+  qnt           Int
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+}
+
+model User {
+  id           String   @id @default(uuid())
+  createAt     DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  username     String   @unique
+  passwordHash String
+}
