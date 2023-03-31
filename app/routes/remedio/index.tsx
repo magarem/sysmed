@@ -43,7 +43,11 @@ export let loader: LoaderFunction = async ({ request }: any) => {
 
   console.log(11);
   const data = {
-    medicamentos: await prisma.Medicamento.findMany(),
+    medicamentos: await prisma.Medicamento.findMany({orderBy: [
+      {
+        id: 'desc',
+      }
+    ]}),
   }
   return data
   
@@ -61,7 +65,6 @@ export function ErrorBoundary({ error }) {
     <html>
       <head>
         <title>Oh no!</title>
-       
       </head>
       <body>
       </body>
@@ -106,7 +109,7 @@ export default function Index() {
   // }, []);
 
   return (
-    <div className="text-3xl font-bold underline">
+    <div className="text-3xl font-bold underline" style={{ width: '100%', padding: '30px' }}>
        <Modal
           // sx={{width: '100px'}}
           open={open}
@@ -132,20 +135,30 @@ export default function Index() {
             </Typography>
           </Box>
         </Modal>
-      <TableContainer component={Paper}>
-      <Button variant="text" onClick={() => navigate("new")}>Incluir</Button>
-      <Table sx={{ width: 800 }} aria-label="simple table">
+        <div >
+      <TableContainer component={Paper} >
+      
+      <Table sx={{ width: '100%' }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Editar</TableCell>
-            <TableCell align="right">Código</TableCell>
-            <TableCell align="right">Nome</TableCell>
-            <TableCell align="right">Unidade</TableCell> 
-            <TableCell align="right">Fornecedor</TableCell>
-            <TableCell align="right">Total</TableCell>
-            <TableCell align="right">Entrada</TableCell>
-            <TableCell align="right">Saída</TableCell>
-            <TableCell align="right">Movimento</TableCell>
+            <TableCell colSpan={3} align="left"><h2>Medicamentos</h2>
+            </TableCell>
+            <TableCell colSpan={4} align="right">
+            <Button variant="contained" onClick={() => navigate("new")}>Incluir novo</Button>
+
+            </TableCell>
+          </TableRow>
+         
+          <TableRow>
+            {/* <TableCell>Editar</TableCell> */}
+            <TableCell align="center">Código</TableCell>
+            <TableCell align="left">Nome</TableCell>
+            {/* <TableCell align="right">Unidade</TableCell>  */}
+            {/* <TableCell align="right">Fornecedor</TableCell> */}
+            <TableCell align="center">Total</TableCell>
+            <TableCell align="center">Entrada</TableCell>
+            <TableCell align="center">Saída</TableCell>
+            <TableCell align="center">Movimento</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -154,22 +167,27 @@ export default function Index() {
               key={row.id}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell align="right">
+              {/* <TableCell align="right">
               <Button variant="text" onClick={() => navigate(`/remedio/show?id=${row.id}`)}>Editar</Button>
+              </TableCell> */}
+              <TableCell component="th" scope="row">
+              <Button variant="text" onClick={() => navigate(`/remedio/show?id=${row.id}`)}>
+                {row.id}</Button></TableCell>
+              <TableCell align="left">
+                  {row.nome} 
               </TableCell>
-              <TableCell component="th" scope="row">{row.codigo}</TableCell>
-              <TableCell align="right">{row.nome} </TableCell>
-              <TableCell align="right">{row.unidade} </TableCell>
-              <TableCell align="right">{row.fornecedor}</TableCell>
-              <TableCell align="right">{row.total}</TableCell>
-              <TableCell align="right"><Button variant="text" onClick={()=>handleOpen('Entrada', row)}>Entrada</Button></TableCell>
-             <TableCell align="right"><Button variant="text" onClick={()=>handleOpen('Saida', row)}>Saída</Button></TableCell>
-             <TableCell align="right"><Button variant="text" onClick={() => navigate("/movimento?medicamento=" + row.id)}>Histórico</Button></TableCell>
+              {/* <TableCell align="right">{row.unidade} </TableCell> */}
+              {/* <TableCell align="right">{row.fornecedor}</TableCell> */}
+              <TableCell align="left">{row.total}</TableCell>
+              <TableCell align="left"><Button variant="text" onClick={()=>handleOpen('Entrada', row)}>Entrada</Button></TableCell>
+             <TableCell align="left"><Button variant="text" onClick={()=>handleOpen('Saida', row)}>Saída</Button></TableCell>
+             <TableCell align="left"><Button variant="text" onClick={() => navigate("/movimento?medicamento=" + row.id)}>Histórico</Button></TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+    </div>
     </div>
   )
 }
